@@ -46,7 +46,7 @@ const buttonClick = (city) => {
 cityInfo(city).then( response  =>{ console.log ( "info =>",response) 
 
          // Transfer content to HTML
-         $(".city").html(`<h2> ${response.name}—(${currentTime}) </h2>`);
+         $(".city").html(`<h2> ${response.name}—${currentTime} </h2>`);
          $(".windspeed").text("Wind Speed: " + Math.round(response.wind.speed) + " mph");
          $(".humidity").text("Humidity: " + Math.round(response.main.humidity) + "%");
          $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
