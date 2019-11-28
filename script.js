@@ -25,7 +25,7 @@ for (let i = 0; i < cityArray.length; i++) {
     let btn = document.createElement("button");
     btn.setAttribute("id", cityArray[i]);
     btn.onclick = (e) => buttonClick( e.target.id);
-;    btn.append(cityArray[i]);
+    btn.append(cityArray[i]);
     cityList.append(btn);
 }
 };
