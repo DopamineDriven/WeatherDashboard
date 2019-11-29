@@ -42,3 +42,13 @@ footer {
     text-shadow: ivory;
     text-size-adjust: 15px;
 }
+
+#cityList {
+    border: solid black 0.5px;
+    margin: 10px;
+    padding: 10px;
+}
+
+#cityList:hover {
+    cursor: pointer;
+}

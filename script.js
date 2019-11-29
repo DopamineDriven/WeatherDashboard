@@ -55,20 +55,20 @@ return returnedResults
 searchBar();
 
 const cityArray = [
+    "Atlanta",
     "Austin",
     "Chicago",
+    "Denver",
     "New York",
     "Orlando",
     "San Francisco",
-    "Seattle",
-    "Denver",
-    "Atlanta"
+    "Seattle"
 ];
 
 let cityList = document.getElementById("cityList");
 function city () {
 for (let i = 0; i < cityArray.length; i++) {
-    let btn = document.createElement("button");
+    let btn = document.createElement("tr");
     btn.setAttribute("id", cityArray[i]);
     btn.onclick = (e) => buttonClick( e.target.id);
     btn.append(cityArray[i]);
