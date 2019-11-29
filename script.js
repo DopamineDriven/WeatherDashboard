@@ -5,8 +5,20 @@ let inputSearch = document.getElementById("search-field");
 let APIKey = "be0f2d303d1fee041a7f61fbcfa5a746";
 let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
-let queryURL = "https://api.openweathermap.org/data/2.5/weather?" +
-"q=Evanston&units=imperial&appid=" + APIKey;
+let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=Evanston&units=imperial&appid=${APIKey}`;
+
+//establishing query params to incorporate search bar functionality into dashboard
+function searchBar () {
+let queryParams = `api-key: ${APIKey}`;
+
+queryParams.q = $("#search-terms")
+.val()
+.trim();
+let returnedResults = queryURL+$.param(queryParams);
+return returnedResults
+};
+
+searchBar();
 
 let cityArray = [
     "Austin",
@@ -39,11 +51,11 @@ const cityInfo = async (city) => {
     const result = await response.json();
     return result;
 
-}
+};
 
 const buttonClick = (city) => {
 
-cityInfo(city).then( response  =>{ console.log ( "info =>",response) 
+cityInfo(city).then(response =>{console.log("info =>",response) 
 
          // Transfer content to HTML
          $(".city").html(`<h2> ${response.name}—${currentTime} </h2>`);
@@ -55,7 +67,6 @@ cityInfo(city).then( response  =>{ console.log ( "info =>",response)
 } );
 
 }
-
 
 /*
 
