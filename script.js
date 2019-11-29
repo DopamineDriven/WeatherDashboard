@@ -23,8 +23,8 @@ function successFunction(position) {
     $.ajax({
     url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
     method: "GET"
-})
-// We store all of the retrieved data inside of an object called "response"
+    })
+//store all retrieved data inside of an object called "response"
     .then(function(response) {
 
         $(".city").html(`<h2> ${response.name}—${currentTime} </h2>`);
@@ -54,6 +54,7 @@ return returnedResults
 
 searchBar();
 
+//creating an array of city names
 const cityArray = [
     "Austin",
     "Chicago",
@@ -65,6 +66,7 @@ const cityArray = [
     "Atlanta"
 ];
 
+//creating city function to cycle through cityArray elements and retrieve city data upon click event
 let cityList = document.getElementById("cityList");
 function city () {
 for (let i = 0; i < cityArray.length; i++) {
@@ -76,7 +78,7 @@ for (let i = 0; i < cityArray.length; i++) {
 }
 };
 city();
-// Here we run our AJAX call to the OpenWeatherMap API
+// run AJAX call to OpenWeatherMap API
 
 const cityInfo = async (city) => {
 
