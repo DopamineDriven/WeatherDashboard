@@ -19,6 +19,7 @@ function successFunction(position) {
   let lng = position.coords.longitude;
   console.log(lat, lng)
 
+  //run AJAX call
     $.ajax({
     url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
     method: "GET"
@@ -101,63 +102,9 @@ cityInfo(city).then(response =>{console.log("info =>",response)
 
 }
 
-/*
-
-$.ajax({
-    url: queryURL,
-    method: "GET"
-    })
-    // We store all of the retrieved data inside of an object called "response"
-    .then(function(response) {
-
-        // Log the queryURL
-        console.log(queryURL);
-
-        // Log the resulting object
-        console.log(response);
-        let uvi=("http://api.openweathermap.org/data/2.5/uvi?" +
-        "q=Evanston&units=imperial&appid=" + APIKey);
-        // Transfer content to HTML
-        $(".city").html(`<h2> ${response.name}—(${currentTime}) </h2>`);
-        $(".windspeed").text("Wind Speed: " + Math.round(response.wind.speed) + " mph");
-        $(".humidity").text("Humidity: " + Math.round(response.main.humidity) + "%");
-        $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
-        $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
-        $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
-        $(".uvIndex").text("UV Index: " + response.uvi);
-
-        // Converts the temp to Kelvin with the below formula
-        var tempF = (response.main.temp - 273.15) * 1.80 + 32;
-        $(".tempF").text("Temperature (Kelvin) " + tempF);
-
-        // Log the data in the console as well
-        console.log("Wind Speed: " + response.wind.speed);
-        console.log("Humidity: " + response.main.humidity);
-        console.log("Temperature (F): " + response.main.temp);
-    });
-*/
-
-    //Need to get users geolocation to load current weather conditions in their area
-    //below is sample code from W3 schools
-    //must use openweathermap.org api to retrieve geolocation specific weather as a function of local coordinates via geolocation
-    //must use openweathermap.org api to retrieve 5-day forecast as a function of local coordinates via geolocation
-    //must use openweathermap.org api to retrieve current and 5-day outlook as a function of city name via a search bar
+/*  //must use openweathermap.org api to retrieve 5-day forecast as a function of local coordinates via geolocation
+    //must use openweathermap.org api to retrieve current and 5-day outlook as a function of city name via search bar or button widgets
     //link to 5-day forecast api https://openweathermap.org/forecast5
     //link to current forecast api https://openweathermap.org/current
-    //geolocation snippet below
-    //<script>
-/*var x = document.getElementById("demo");
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-
-function showPosition(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude +
-  "<br>Longitude: " + position.coords.longitude;
-}
-</script> */
+    //<script>*/
 
