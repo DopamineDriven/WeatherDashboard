@@ -7,9 +7,42 @@ let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
 let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=Evanston&units=imperial&appid=${APIKey}`;
 
-//establishing query params to incorporate search bar functionality into dashboard
+//retrieving geolocation
+let geocoder;
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+} 
+//Get the latitude and the longitude;
+function successFunction(position) {
+  let lat = position.coords.latitude;
+  let lng = position.coords.longitude;
+  console.log(lat, lng)
+
+    $.ajax({
+    url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
+    method: "GET"
+})
+// We store all of the retrieved data inside of an object called "response"
+    .then(function(response) {
+
+        $(".city").html(`<h2> ${response.name}—${currentTime} </h2>`);
+        $(".windspeed").text("Wind Speed: " + Math.round(response.wind.speed) + " mph");
+        $(".humidity").text("Humidity: " + Math.round(response.main.humidity) + "%");
+        $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
+        $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
+        $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
+
+    });
+}
+function errorFunction(){
+    alert("Geocoder failed");
+}
+
 function searchBar () {
 let queryParams = `api-key: ${APIKey}`;
+
+//establishing query params to incorporate search bar functionality into dashboard
 
 queryParams.q = $("#search-terms")
 .val()
@@ -20,7 +53,7 @@ return returnedResults
 
 searchBar();
 
-let cityArray = [
+const cityArray = [
     "Austin",
     "Chicago",
     "New York",
