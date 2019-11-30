@@ -35,7 +35,23 @@ function successFunction(position) {
         $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
 
     });
-}
+    $.ajax({
+        url: `http://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lng}`,
+        method: "GET"
+    })
+    .then(function(response) {
+
+        $(".uvIndex").text("UV Index: " + (response.value));
+    });
+    /*$.ajax({
+        url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
+        method: "GET"
+    })
+    .then(function(response) {
+        $("#5-day-forecast").html(`<h2> ${response.name}</h2>`);
+        $("#temp_outlook").text("Temperature: " + Math.round(response.main.temp) + "°F");
+});*/
+};
 function errorFunction(){
     alert("Geocoder failed");
 }
@@ -75,6 +91,7 @@ for (let i = 0; i < cityArray.length; i++) {
     btn.onclick = (e) => buttonClick( e.target.id);
     btn.append(cityArray[i]);
     cityList.append(btn);
+    
 }
 };
 city();
@@ -101,6 +118,7 @@ cityInfo(city).then(response =>{console.log("info =>",response)
          $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
          $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
 } );
+
 
 }
 
