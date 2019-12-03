@@ -1,6 +1,3 @@
-let iconSearch = document.getElementById("search-icon");
-let inputSearch = document.getElementById("search-field");
-
 //API Key
 let APIKey = "be0f2d303d1fee041a7f61fbcfa5a746";
 let momento = document.getElementById("currentDay");
@@ -56,19 +53,57 @@ function errorFunction(){
     alert("Geocoder failed");
 }
 
-function searchBar () {
-let queryParams = `api-key: ${APIKey}`;
+function inputSearch () {
 
-//establishing query params to incorporate search bar functionality into dashboard
+$("#search-btn").click(function (event) {
+    event.preventDefault(console.log("click"))
+    let ciudad=$("#search-terms").val().trim();
+    console.log(ciudad);
+    if (ciudad != '') {
+    $.ajax({
+        url: `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&units=imperial&appid=${APIKey}`,
+        method: "GET"
+    })
+    .then(function(response) {
 
-queryParams.q = $("#search-terms")
-.val()
-.trim();
-let returnedResults = queryURL+$.param(queryParams);
-return returnedResults
+        $(".city").html(`<h2> ${response.name}—${currentTime} </h2>`);
+        $(".windspeed").text("Wind Speed: " + Math.round(response.wind.speed) + " mph");
+        $(".humidity").text("Humidity: " + Math.round(response.main.humidity) + "%");
+        $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
+        $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
+        $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
+    });
+}
+})
 };
 
-searchBar();
+inputSearch();
+/*function searchBar () {
+    let queryParams = `api-key: ${APIKey}`;
+
+    //establishing query params to incorporate search bar functionality into dashboard
+
+    queryParams.q = $("#search-terms")
+    .val()
+    .trim();
+    let searchBtn = document.getElementById("search-btn").addEventListener("click", function(event) {
+        event.preventDefault(console.log("click"))
+    });
+
+    $("#search-btn").on("click", function(){
+        $('input[type="text"]').each(function (){
+            let id = $(this).attr('#search-terms');
+            let value = $(this).val();
+            localStorage.setItem(id, value)
+        })
+    });
+
+    let returnedResults = queryURL+$.param(searchBtn);
+    console.log(returnedResults)
+    return returnedResults
+};
+
+searchBar();*/
 
 //creating an array of city names
 const cityArray = [
