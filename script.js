@@ -4,6 +4,17 @@ let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
 let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=Evanston&units=imperial&appid=${APIKey}`;
 
+function cityUV (lon, lat) {
+    $.ajax({
+        url: `https://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lon}`,
+        method: "GET"
+    })
+    .then(function(response1) {
+
+        $(".uvIndex").text("UV Index: " + (response1.value));
+    });
+}
+
 //retrieving geolocation
 let geocoder;
 
@@ -30,16 +41,9 @@ function successFunction(position) {
         $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
         $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
         $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
-
+        
     });
-    $.ajax({
-        url: `https://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lng}`,
-        method: "GET"
-    })
-    .then(function(response) {
-
-        $(".uvIndex").text("UV Index: " + (response.value));
-    });
+        cityUV (lng, lat);
     /*$.ajax({
         url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
         method: "GET"
@@ -72,6 +76,7 @@ $("#search-btn").click(function (event) {
         $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
         $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
         $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
+        cityUV (response.coord.lon, response.coord.lat);
     });
 }
 })
@@ -152,7 +157,8 @@ cityInfo(city).then(response =>{console.log("info =>",response)
          $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
          $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
          $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
-} );
+    cityUV (response.coord.lon, response.coord.lat);
+});
 
 
 }
