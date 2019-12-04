@@ -15,6 +15,53 @@ function cityUV (lon, lat) {
     });
 }
 
+/*function cityForecast () {
+    $.ajax({
+        url: `api.openweathermap.org/data/2.5/forecast?q=${city},{country code}?appid=${APIKey}`,
+        method: "GET"
+    })
+
+}*/
+
+
+function fiveDayForecast (city) {
+    let weatherurl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${APIKey}`;
+    console.log(weatherurl);
+    $.ajax({
+        url: weatherurl,
+        type: "GET",
+        })
+        .then(function(response2) {
+            for (let i=0; i<5; i++) {
+                let temp = response2.list[i].main.temp;
+                let humidity = response2.list[i].main.humidity;
+                let date = moment().format('l'); 
+                let icon = response2.list[i].weather[0].icon;
+                let iconurl = "https://openweathermap.org/img/w/" + icon + ".png";
+                let currentCondition = $("<div></div>");
+                currentCondition.addClass("col-sm currentCondition");
+                let card = $("<div></div>");
+                card.addClass("card");
+                let cardBody = $("<div></div>");
+                cardBody.addClass("card-body 5-day");
+                let d8 = $(`<p><strong>${date}</strong></p>`);
+                cardBody.append(d8);
+                let divImage = $(`<div><img src="${iconurl}" /></div>`);
+                cardBody.append(divImage)
+                let pTemp = $(`<p>${temp}</p>`);
+                cardBody.append(pTemp);
+                let pHumidity = $(`<p>${humidity}</p>`)
+                cardBody.append(pHumidity)
+                card.append(cardBody)
+                currentCondition.append(card);
+                $("#5-day-forecast").append(currentCondition[0]);
+            }
+    });
+};
+
+
+
+
 //retrieving geolocation
 let geocoder;
 
@@ -76,41 +123,14 @@ $("#search-btn").click(function (event) {
         $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
         $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
         $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
-        cityUV (response.coord.lon, response.coord.lat);
+        //cityUV (response.coord.lon, response.coord.lat);
+        fiveDayForecast(ciudad);
     });
 }
 })
 };
 
 inputSearch();
-/*function searchBar () {
-    let queryParams = `api-key: ${APIKey}`;
-
-    //establishing query params to incorporate search bar functionality into dashboard
-
-    queryParams.q = $("#search-terms")
-    .val()
-    .trim();
-    let searchBtn = document.getElementById("search-btn").addEventListener("click", function(event) {
-        event.preventDefault(console.log("click"))
-    });
-
-    $("#search-btn").on("click", function(){
-        $('input[type="text"]').each(function (){
-            let id = $(this).attr('#search-terms');
-            let value = $(this).val();
-            localStorage.setItem(id, value)
-        })
-    });
-
-    let returnedResults = queryURL+$.param(searchBtn);
-    console.log(returnedResults)
-    return returnedResults
-};
-
-searchBar();*/
-
-//creating an array of city names
 const cityArray = [
     "Atlanta",
     "Austin",
@@ -124,7 +144,7 @@ const cityArray = [
 
 //creating city function to cycle through cityArray elements and retrieve city data upon click event
 let cityList = document.getElementById("cityList");
-function city () {
+function setupCityListBox () {
 for (let i = 0; i < cityArray.length; i++) {
     let btn = document.createElement("tr");
     btn.setAttribute("id", cityArray[i]);
@@ -134,7 +154,7 @@ for (let i = 0; i < cityArray.length; i++) {
     
 }
 };
-city();
+setupCityListBox();
 // run AJAX call to OpenWeatherMap API
 
 const cityInfo = async (city) => {
@@ -158,6 +178,7 @@ cityInfo(city).then(response =>{console.log("info =>",response)
          $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
          $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
     cityUV (response.coord.lon, response.coord.lat);
+    fiveDayForecast(city);
 });
 
 
