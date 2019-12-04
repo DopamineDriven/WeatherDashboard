@@ -33,7 +33,7 @@ function successFunction(position) {
 
     });
     $.ajax({
-        url: `http://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lng}`,
+        url: `https://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lng}`,
         method: "GET"
     })
     .then(function(response) {
@@ -156,6 +156,7 @@ cityInfo(city).then(response =>{console.log("info =>",response)
 
 
 }
+
 
 /*  //must use openweathermap.org api to retrieve 5-day forecast as a function of local coordinates via geolocation
     //must use openweathermap.org api to retrieve current and 5-day outlook as a function of city name via search bar or button widgets
