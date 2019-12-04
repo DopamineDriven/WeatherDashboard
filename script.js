@@ -32,6 +32,8 @@ function fiveDayForecast (city) {
         type: "GET",
         })
         .then(function(response2) {
+            console.log("about to empty")
+            $("#5-day-forecast").empty();
             for (let i=0; i<5; i++) {
                 let temp = response2.list[i].main.temp;
                 let humidity = response2.list[i].main.humidity;
@@ -110,6 +112,7 @@ $("#search-btn").click(function (event) {
     event.preventDefault(console.log("click"))
     let ciudad=$("#search-terms").val().trim();
     console.log(ciudad);
+    cityArray.push(ciudad);
     if (ciudad != '') {
     $.ajax({
         url: `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&units=imperial&appid=${APIKey}`,
@@ -123,8 +126,10 @@ $("#search-btn").click(function (event) {
         $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
         $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
         $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
-        //cityUV (response.coord.lon, response.coord.lat);
+        cityUV (response.coord.lon, response.coord.lat);
         fiveDayForecast(ciudad);
+        $("#cityList").empty();
+        setupCityListBox();
     });
 }
 })
