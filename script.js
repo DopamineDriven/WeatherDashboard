@@ -15,14 +15,6 @@ function cityUV (lon, lat) {
     });
 }
 
-/*function cityForecast () {
-    $.ajax({
-        url: `api.openweathermap.org/data/2.5/forecast?q=${city},{country code}?appid=${APIKey}`,
-        method: "GET"
-    })
-
-}*/
-
 
 function fiveDayForecast (city) {
     let weatherurl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${APIKey}`;
@@ -32,7 +24,7 @@ function fiveDayForecast (city) {
         type: "GET",
         })
         .then(function(response2) {
-            console.log("about to empty")
+            //empties and repopulates the five day forecast each time a new city is searched
             $("#5-day-forecast").empty();
             for (let i=0; i<5; i++) {
                 let temp = response2.list[i].main.temp;
@@ -50,9 +42,9 @@ function fiveDayForecast (city) {
                 cardBody.append(d8);
                 let divImage = $(`<div><img src="${iconurl}" /></div>`);
                 cardBody.append(divImage)
-                let pTemp = $(`<p>${temp}</p>`);
+                let pTemp = $("<p>"+Math.round(temp)+"°F</p>");
                 cardBody.append(pTemp);
-                let pHumidity = $(`<p>${humidity}</p>`)
+                let pHumidity = $("<p>"+Math.round(humidity)+"% Humidity</p>")
                 cardBody.append(pHumidity)
                 card.append(cardBody)
                 currentCondition.append(card);
@@ -60,7 +52,6 @@ function fiveDayForecast (city) {
             }
     });
 };
-
 
 
 
@@ -81,7 +72,8 @@ function successFunction(position) {
     url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
     method: "GET"
     })
-//store all retrieved data inside of an object called "response"
+    
+    //store all retrieved data inside of an object called "response"
     .then(function(response) {
 
         $(".city").html(`<h2> ${response.name}—${currentTime} </h2>`);
@@ -93,14 +85,6 @@ function successFunction(position) {
         
     });
         cityUV (lng, lat);
-    /*$.ajax({
-        url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
-        method: "GET"
-    })
-    .then(function(response) {
-        $("#5-day-forecast").html(`<h2> ${response.name}</h2>`);
-        $("#temp_outlook").text("Temperature: " + Math.round(response.main.temp) + "°F");
-});*/
 };
 function errorFunction(){
     alert("Geocoder failed");
@@ -160,7 +144,6 @@ for (let i = 0; i < cityArray.length; i++) {
 }
 };
 setupCityListBox();
-// run AJAX call to OpenWeatherMap API
 
 const cityInfo = async (city) => {
 
@@ -187,12 +170,4 @@ cityInfo(city).then(response =>{console.log("info =>",response)
 });
 
 
-}
-
-
-/*  //must use openweathermap.org api to retrieve 5-day forecast as a function of local coordinates via geolocation
-    //must use openweathermap.org api to retrieve current and 5-day outlook as a function of city name via search bar or button widgets
-    //link to 5-day forecast api https://openweathermap.org/forecast5
-    //link to current forecast api https://openweathermap.org/current
-    //<script>*/
-
+};
