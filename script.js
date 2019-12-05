@@ -2,7 +2,6 @@
 let APIKey = "be0f2d303d1fee041a7f61fbcfa5a746";
 let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
-let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=Evanston&units=imperial&appid=${APIKey}`;
 
 function cityUV(lon, lat) {
     $.ajax({
@@ -34,7 +33,7 @@ function fiveDayForecast(city) {
                 let iconurl = "https://openweathermap.org/img/w/" + icon + ".png";
                 let currentCondition = $("<div></div>");
                 let card = $("<div></div>");
-                card.addClass("card bg-primary text-white");
+                card.addClass("card mb-2 bg-primary text-white");
                 let cardBody = $("<div></div>");
                 cardBody.addClass("card-body 5-day");
                 let d8 = $(`<p><strong>${date}</strong></p>`);
