@@ -2,18 +2,18 @@
 let APIKey = "be0f2d303d1fee041a7f61fbcfa5a746";
 let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
-let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=Evanston&units=imperial&appid=${APIKey}`;
 
 function cityUV (lon, lat) {
+    let uvURL = `https://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lon}`;
     $.ajax({
-        url: `https://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lon}`,
+        url: uvURL,
         method: "GET"
     })
     .then(function(response1) {
 
-        $(".uvIndex").text("UV Index: " + (response1.value));
+        $(".uvIndex").text(`UV Index: ${response1.value}`);
     });
-}
+};
 
 
 function fiveDayForecast (city) {
@@ -21,15 +21,16 @@ function fiveDayForecast (city) {
     console.log(weatherurl);
     $.ajax({
         url: weatherurl,
-        type: "GET",
+        type: "GET"
         })
         .then(function(response2) {
+
             //empties and repopulates the five day forecast each time a new city is searched
             $("#5-day-forecast").empty();
             for (let i=0; i<5; i++) {
                 let temp = response2.list[i].main.temp;
                 let humidity = response2.list[i].main.humidity;
-                let date = moment().format('l'); 
+                let date = moment().add(i,"days").format('l'); 
                 let icon = response2.list[i].weather[0].icon;
                 let iconurl = "https://openweathermap.org/img/w/" + icon + ".png";
                 let currentCondition = $("<div></div>");
@@ -50,10 +51,9 @@ function fiveDayForecast (city) {
                 currentCondition.append(card);
                 $("#5-day-forecast").append(currentCondition[0]);
             }
+            console.log(response2);
     });
 };
-
-
 
 //retrieving geolocation
 let geocoder;
@@ -66,13 +66,12 @@ function successFunction(position) {
   let lat = position.coords.latitude;
   let lng = position.coords.longitude;
   console.log(lat, lng)
-
+  let geoURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`;
   //run AJAX call
     $.ajax({
-    url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${APIKey}`,
+    url: geoURL,
     method: "GET"
     })
-    
     //store all retrieved data inside of an object called "response"
     .then(function(response) {
 
@@ -82,10 +81,11 @@ function successFunction(position) {
         $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
         $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
         $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
-        
+
     });
         cityUV (lng, lat);
 };
+//If user declines to enable geolocation or geocoder fails an error message is generated
 function errorFunction(){
     alert("Geocoder failed");
 }
@@ -97,9 +97,10 @@ $("#search-btn").click(function (event) {
     let ciudad=$("#search-terms").val().trim();
     console.log(ciudad);
     cityArray.push(ciudad);
+    let buttonURL = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&units=imperial&appid=${APIKey}`;
     if (ciudad != '') {
     $.ajax({
-        url: `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&units=imperial&appid=${APIKey}`,
+        url: buttonURL,
         method: "GET"
     })
     .then(function(response) {
@@ -139,9 +140,8 @@ for (let i = 0; i < cityArray.length; i++) {
     btn.setAttribute("id", cityArray[i]);
     btn.onclick = (e) => buttonClick( e.target.id);
     btn.append(cityArray[i]);
-    cityList.append(btn);
-    
-}
+    cityList.append(btn);  
+    }
 };
 setupCityListBox();
 
@@ -168,6 +168,4 @@ cityInfo(city).then(response =>{console.log("info =>",response)
     cityUV (response.coord.lon, response.coord.lat);
     fiveDayForecast(city);
 });
-
-
 };
