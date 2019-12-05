@@ -115,15 +115,16 @@ function inputSearch() {
 
 inputSearch();
 const cityArray = [
-    "Atlanta",
+
+];
+/*    "Atlanta",
     "Austin",
     "Chicago",
     "Denver",
     "New York",
     "Orlando",
     "San Francisco",
-    "Seattle"
-];
+    "Seattle"*/
 
 //creating city function to cycle through cityArray elements and retrieve city data upon click event
 let cityList = document.getElementById("cityList");
