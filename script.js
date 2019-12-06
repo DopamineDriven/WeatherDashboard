@@ -1,13 +1,16 @@
 //API Key
+//this global kepyress function overrides styling interference with linking search form and search button functionality
 $("#search-terms").keypress(function(e){
     if(e.which == 13) {
         $("#search-btn").click();
     }
 });
+//APIKey unique to open weather account
 let APIKey = "be0f2d303d1fee041a7f61fbcfa5a746";
 let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
 
+//This function uses longitutde and lattitude data to retrieve UV Index info for a given city
 function cityUV(lon, lat) {
     $.ajax({
         url: `https://api.openweathermap.org/data/2.5/uvi?appid=${APIKey}&lat=${lat}&lon=${lon}`,
@@ -19,7 +22,7 @@ function cityUV(lon, lat) {
         });
 }
 
-
+//ajax call for five-day forecast
 function fiveDayForecast(city) {
     let weatherurl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${APIKey}`;
     console.log(weatherurl);
@@ -30,7 +33,9 @@ function fiveDayForecast(city) {
         .then(function (response2) {
             //empties and repopulates the five day forecast each time a new city is searched
             $("#5-day-forecast").empty();
+            //j is used for iterating date for the five day forecast
             let j=0
+            //response2 is an array of 40 elements [0]-[39]
             for (let i = 4; i < 40;) {
                 console.log(response2)
                 console.log(i);
@@ -39,6 +44,7 @@ function fiveDayForecast(city) {
                 let date = moment().add(j, 'days').format('l');
                 let icon = response2.list[i].weather[0].icon;
                 let iconurl = "https://openweathermap.org/img/w/" + icon + ".png";
+                //dynamically generating HTML elements for five-day forecast 
                 let currentCondition = $("<div></div>");
                 let card = $("<div></div>");
                 card.addClass("card mb-2 bg-primary text-white");
@@ -55,7 +61,9 @@ function fiveDayForecast(city) {
                 card.append(cardBody)
                 currentCondition.append(card);
                 $("#5-day-forecast").append(currentCondition[0]);
+                //iterates i every 8th element from 4 on (4, 12, 20, 28, 36); these elements contain weather for noon each day
                 i+=8;
+                //j++ iterates through the DD date (12/05-12/09)
                 j++;
             }
         });
@@ -102,11 +110,14 @@ function updateLocation(response) {
 function errorFunction() {
     alert("Geocoder failed");
 }
+//This empty array parses weather-search-terms key from local storage to have previously searched cities loaded upon refreshing the page
 const cityArray = JSON.parse(localStorage.getItem("weather-search-terms"));
 
+//This is the function for the search-term form and appended search button; this is the city search bar
 function inputSearch() {
 
     $("#search-btn").click(function (event) {
+        //this event prevents default refreshing of the page upon button click
         event.preventDefault(console.log("click"))
         let ciudad = $("#search-terms").val().trim();
         console.log(ciudad);
@@ -128,13 +139,6 @@ function inputSearch() {
 };
 
 inputSearch();
-//on page load
-    //check local storage
-    //if there are searches
-        //set the storage to the city array
-
-    
-    // if no storage yet, display "recent searches go here"
 
 //creating city function to cycle through cityArray elements and retrieve city data upon click event
 let cityList = document.getElementById("cityList");
