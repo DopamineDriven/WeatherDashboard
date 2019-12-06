@@ -1,4 +1,9 @@
 //API Key
+$("#search-terms").keypress(function(e){
+    if(e.which == 13) {
+        $("#search-btn").click();
+    }
+});
 let APIKey = "be0f2d303d1fee041a7f61fbcfa5a746";
 let momento = document.getElementById("currentDay");
 let currentTime = (moment().format('MM/DD/YYYY'));
@@ -25,10 +30,13 @@ function fiveDayForecast(city) {
         .then(function (response2) {
             //empties and repopulates the five day forecast each time a new city is searched
             $("#5-day-forecast").empty();
-            for (let i = 0; i < 5; i++) {
+            let j=0
+            for (let i = 4; i < 40;) {
+                console.log(response2)
+                console.log(i);
                 let temp = response2.list[i].main.temp;
                 let humidity = response2.list[i].main.humidity;
-                let date = moment().add(i, 'days').format('l');
+                let date = moment().add(j, 'days').format('l');
                 let icon = response2.list[i].weather[0].icon;
                 let iconurl = "https://openweathermap.org/img/w/" + icon + ".png";
                 let currentCondition = $("<div></div>");
@@ -47,6 +55,8 @@ function fiveDayForecast(city) {
                 card.append(cardBody)
                 currentCondition.append(card);
                 $("#5-day-forecast").append(currentCondition[0]);
+                i+=8;
+                j++;
             }
         });
 };
@@ -92,6 +102,7 @@ function updateLocation(response) {
 function errorFunction() {
     alert("Geocoder failed");
 }
+const cityArray = JSON.parse(localStorage.getItem("weather-search-terms"));
 
 function inputSearch() {
 
@@ -107,28 +118,28 @@ function inputSearch() {
             }).then(function (response) {
                 updateLocation(response);
                 $("#cityList").empty();
-                setupCityListBox();
+                localStorage.setItem("weather-search-terms", JSON.stringify(cityArray));
+                let savedCities = JSON.parse(localStorage.getItem("weather-search-terms"));
+                console.log(savedCities)
+                setupCityListBox(savedCities);
             });
         }
     })
 };
 
 inputSearch();
-const cityArray = [
-    "Atlanta",
-    "Austin",
-    "Chicago",
-    "Denver",
-    "New York",
-    "Orlando",
-    "San Francisco",
-    "Seattle"
-];
+//on page load
+    //check local storage
+    //if there are searches
+        //set the storage to the city array
+
+    
+    // if no storage yet, display "recent searches go here"
 
 //creating city function to cycle through cityArray elements and retrieve city data upon click event
 let cityList = document.getElementById("cityList");
 
-function setupCityListBox() {
+function setupCityListBox(cityArray) {
     for (let i = 0; i < cityArray.length; i++) {
         let btn = document.createElement("button");
         btn.setAttribute("id", cityArray[i]);
@@ -139,7 +150,7 @@ function setupCityListBox() {
 
     }
 };
-setupCityListBox();
+setupCityListBox(JSON.parse(localStorage.getItem("weather-search-terms")));
 
 const cityInfo = async (city) => {
 
