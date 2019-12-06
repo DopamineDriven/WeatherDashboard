@@ -111,7 +111,6 @@ function errorFunction() {
     alert("Geocoder failed");
 }
 //This empty array parses weather-search-terms key from local storage to have previously searched cities loaded upon refreshing the page
-const cityArray = JSON.parse(localStorage.getItem("weather-search-terms"));
 
 //This is the function for the search-term form and appended search button; this is the city search bar
 function inputSearch() {
@@ -142,7 +141,14 @@ inputSearch();
 
 //creating city function to cycle through cityArray elements and retrieve city data upon click event
 let cityList = document.getElementById("cityList");
-
+let cityArray = JSON.parse(localStorage.getItem("weather-search-terms"));
+if (cityArray&&cityArray!==null) 
+{
+    setupCityListBox(cityArray);
+} else {
+    cityArray=[];
+    setupCityListBox(cityArray);
+}
 function setupCityListBox(cityArray) {
     for (let i = 0; i < cityArray.length; i++) {
         let btn = document.createElement("button");
@@ -154,7 +160,10 @@ function setupCityListBox(cityArray) {
 
     }
 };
-setupCityListBox(JSON.parse(localStorage.getItem("weather-search-terms")));
+
+
+
+
 
 const cityInfo = async (city) => {
 
