@@ -2,7 +2,7 @@
 # Unit 06 Server-Side APIs Homework: Weather Dashboard
 
 
-## Instructions
+## About
 
 - This weather dashboard uses geolocation to derive the users current coordinates and load the current weather and five day forecast data accordingly.
 - There is a local storage functionality that populates an empty array located beneath the search entry form.
