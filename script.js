@@ -127,6 +127,7 @@ function inputSearch() {
                 method: "GET"
             }).then(function (response) {
                 updateLocation(response);
+                cityUV(response.coord.lon, response.coord.lat)
                 $("#cityList").empty();
                 localStorage.setItem("weather-search-terms", JSON.stringify(cityArray));
                 let savedCities = JSON.parse(localStorage.getItem("weather-search-terms"));
@@ -160,10 +161,6 @@ function setupCityListBox(cityArray) {
 
     }
 };
-
-
-
-
 
 const cityInfo = async (city) => {
 
