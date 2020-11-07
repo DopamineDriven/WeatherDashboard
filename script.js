@@ -22,6 +22,12 @@ function cityUV(lon, lat) {
         });
 }
 
+function degToCompass(num) {
+    var val = Math.floor((num / 22.5) + 0.5);
+    var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+    return arr[(val % 16)];
+}
+
 //ajax call for five-day forecast
 function fiveDayForecast(city) {
     let weatherurl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${APIKey}`;
@@ -64,11 +70,68 @@ function fiveDayForecast(city) {
                 //iterates i every 8th element from 4 on (4, 12, 20, 28, 36); these elements contain weather for noon each day
                 i+=8;
                 //j++ iterates through the DD date (12/05-12/09)
-                j++;
+                ++j;
             }
         });
 };
 
+/*
+function fiveDayForecast(city) {
+	let weatherurl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${APIKey}`;
+	console.log(weatherurl);
+	$.ajax({
+		url: weatherurl,
+		type: 'GET'
+	}).then(function (response2) {
+		//empties and repopulates the five day forecast each time a new city is searched
+		$('#5-day-forecast').empty();
+		//j is used for iterating date for the five day forecast
+		let j = 0;
+		let k = 0;
+        //response2 is an array of 40 elements [0]-[39]
+		for (let i = 4; i < 40; ) {
+			console.log('response 2', response2);
+			console.log(i);
+            for (k < 40; k+=3;) {
+                const timeConvert = moment()
+                    .add(response2.list[k].dt)
+                    .format('dddd, MMMM Do, YYYY h:mm:ss A');
+                console.log('comverting time', timeConvert);
+                console.log('convert time', response2.list[k].dt);
+            }
+			const temp_max = response2.list[i].main.temp_max;
+			const temp_min = response2.list[i].main.temp_min;
+			let humidity = response2.list[i].main.humidity;
+			let date = moment().add(j, 'days').format('l');
+			let icon = response2.list[i].weather[0].icon;
+			let iconurl = 'https://openweathermap.org/img/w/' + icon + '.png';
+			//dynamically generating HTML elements for five-day forecast
+			let currentCondition = $('<div></div>');
+			let card = $('<div></div>');
+			card.addClass('card mb-2 bg-primary text-white');
+			let cardBody = $('<div></div>');
+			cardBody.addClass('card-body 5-day');
+			let d8 = $(`<p><strong>${date}</strong></p>`);
+			cardBody.append(d8);
+			let divImage = $(`<div><img src="${iconurl}" /></div>`);
+			cardBody.append(divImage);
+			let pTemp = $('<p>High: ' + Math.round(temp_max) + '°F</p>');
+			let pLow = $('<p>Low: ' + Math.round(temp_min) + '°F</p>');
+			cardBody.append(pTemp);
+			cardBody.append(pLow);
+			let pHumidity = $('<p>' + Math.round(humidity) + '% Humidity</p>');
+			cardBody.append(pHumidity);
+			card.append(cardBody);
+			currentCondition.append(card);
+			$('#5-day-forecast').append(currentCondition[0]);
+			//iterates i every 8th element from 4 on (4, 12, 20, 28, 36); these elements contain weather for noon each day
+			i += 8;
+			//j++ iterates through the DD date (12/05-12/09)
+			j++;
+		}
+	});
+}
+*/
 
 
 //retrieving geolocation
@@ -97,12 +160,16 @@ function successFunction(position) {
 };
 
 function updateLocation(response) {
+    const windDeg = Math.round(response.wind.deg);
+    const toDirection = degToCompass(windDeg);
+    console.log(toDirection);
     $(".city").html(`<h2>${response.name} (${currentTime}) <img src="https://openweathermap.org/img/w/${response.weather[0].icon}.png"></h2>`);
-    $(".windspeed").text("Wind Speed: " + Math.round(response.wind.speed) + " mph");
+    $(".windspeed").text("Wind: " + toDirection + " at " + Math.round(response.wind.speed) + " mph");
     $(".humidity").text("Humidity: " + Math.round(response.main.humidity) + "%");
     $(".temperature").text("Temperature: " + Math.round(response.main.temp) + "°F");
     $(".temp_low").text("Low: " + Math.round(response.main.temp_min) + "°F");
     $(".temp_high").text("High: " + Math.round(response.main.temp_max) + "°F");
+    $(".real_feel").text("Feels Like: " + Math.round(response.main.feels_like) + "°F");
 
     fiveDayForecast(response.name);
 }
