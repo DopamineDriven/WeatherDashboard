@@ -1,5 +1,5 @@
 //API Key
-//this global kepyress function overrides styling interference with linking search form and search button functionality
+//this global keypress function overrides styling interference with linking search form and search button functionality
 $("#search-terms").keypress(function(e){
     if(e.which == 13) {
         $("#search-btn").click();
